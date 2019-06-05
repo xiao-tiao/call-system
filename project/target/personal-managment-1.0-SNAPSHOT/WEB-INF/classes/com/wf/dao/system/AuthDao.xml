@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wf.dao.system.AuthDao">
+    <resultMap id="resultMap" type="Auth">
+        <id column="id" property="id" javaType="Integer"/>
+        <association property="function" column="fid" javaType="com.wf.entity.system.Function" select="com.wf.dao.system.FunctionDao.findById"></association>
+        <association property="department" column="did" javaType="com.wf.entity.system.Department" select="com.wf.dao.system.DepartmentDao.findOne"></association>
+    </resultMap>
+
+    <insert id="insert" parameterType="Auth" useGeneratedKeys="true">
+        insert into auth(fid,did,status) values(#{fid},#{did},#{status})
+    </insert>
+    <delete id="delete" parameterType="Integer">
+        delete from auth where id=#{id}
+    </delete>
+
+    <delete id="deleteByFid" parameterType="Integer">
+        delete from auth where fid=#{fid}
+    </delete>
+
+    <delete id="deleteByDid" parameterType="Integer">
+        delete from auth where did=#{did}
+    </delete>
+
+    <delete id="deleteByFDid" parameterType="Integer">
+        delete from auth where fid=#{id[0]} and did=#{id[1]}
+    </delete>
+    <update id="update" parameterType="Function">
+        update auth set fid=#{fid},did=#{did},status=#{status} where id=#{id}
+    </update>
+    <select id="findOne" parameterType="Integer" resultMap="resultMap">
+        select * from auth where id=#{id}
+    </select>
+    <select id="findAll" resultMap="resultMap">
+        select * from auth
+    </select>
+
+    <select id="findByFid" resultMap="resultMap" parameterType="Integer">
+        select * from auth where fid=#{fid}
+    </select>
+
+    <select id="findByDid" resultMap="resultMap" parameterType="Integer">
+        select * from auth where did=#{did}
+    </select>
+
+
+
+</mapper>

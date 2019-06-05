@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wf.dao.system.PostDao">
+    <resultMap id="resultMap" type="Post">
+        <id column="id" property="id" javaType="Integer"/>
+        <association property="staff" column="sid" javaType="com.wf.entity.system.Staff" select="com.wf.dao.system.StaffDao.findOne"></association>
+        <association property="department" column="did" javaType="com.wf.entity.system.Department" select="com.wf.dao.system.DepartmentDao.findOne"></association>
+    </resultMap>
+
+    <insert id="insert" parameterType="Post" useGeneratedKeys="true">
+        insert into post(sid,did,status) values(#{sid},#{did},#{status})
+    </insert>
+    <delete id="delete" parameterType="Integer">
+        delete from post where id=#{id}
+    </delete>
+
+    <delete id="deleteBySid" parameterType="Integer">
+        delete from post where sid=#{sid}
+    </delete>
+
+    <delete id="deleteByDid" parameterType="Integer">
+        delete from post where did=#{did}
+    </delete>
+
+    <delete id="deleteBySDid" parameterType="Integer">
+        delete from post where sid=#{id[0]} and did=#{id[1]}
+    </delete>
+    <update id="update" parameterType="Post">
+        update post set sid=#{sid},did=#{did},status=#{status} where id=#{id}
+    </update>
+    <select id="findOne" parameterType="Integer" resultMap="resultMap">
+        select * from post where id=#{id}
+    </select>
+    <select id="findAll" resultMap="resultMap">
+        select * from post
+    </select>
+
+    <select id="findBySid" resultMap="resultMap" parameterType="Integer">
+        select * from post where sid=#{sid}
+    </select>
+
+    <select id="findByDid" resultMap="resultMap" parameterType="Integer">
+        select * from post where did=#{did}
+    </select>
+
+
+    <select id="findPost" resultMap="resultMap" parameterType="Post">
+          select * from post
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="sid != null">
+                AND sid = #{sid}
+            </if>
+            <if test="did != null ">
+                AND did = #{did}
+            </if>
+        </where>
+
+    </select>
+
+</mapper>

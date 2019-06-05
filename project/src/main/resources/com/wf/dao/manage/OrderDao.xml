@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wf.dao.manage.OrderDao">
+    <resultMap id="resultMap" type="Order">
+        <result property="bid" column="bid" javaType="Integer"></result>
+        <result property="did" column="did" javaType="Integer"></result>
+        <result property="sid" column="sid" javaType="Integer"></result>
+        <result property="clas" column="class" javaType="String"/>
+        <result property="createTime" column="create_time" javaType="Date"/>
+        <result property="handTime" column="hand_time" javaType="Date"/>
+        <result property="timeOut" column="time_out" javaType="Integer"></result>
+        <association property="department" column="did" javaType="Department" select="com.wf.dao.system.DepartmentDao.findOne"/>
+        <association property="staff" column="sid" javaType="Staff" select="com.wf.dao.system.StaffDao.findOne"/>
+        <association property="busines" column="bid" javaType="Busines" select="com.wf.dao.manage.BusinesDao.findById" />
+    </resultMap>
+
+    <insert id="addOrders" >
+    insert into orders(bid,question,status,class,did,sid,create_time,time,hand_time,resolve,mode,info,time_out,extra) VALUES
+    <foreach collection="orders" item="orde" separator=",">
+        (#{orde.bid},#{orde.question},#{orde.status},#{orde.clas},#{orde.did},#{orde.sid},#{orde.createTime},#{orde.time},
+        #{orde.handTime},#{orde.resolve},#{orde.mode},#{orde.info},#{orde.timeOut},#{orde.extra})
+    </foreach>
+    </insert>
+
+   <!-- <insert id="addOrders">
+        <foreach collection="orders" item="orde" separator=";">
+        insert into orders(bid,question,status,class,did,sid,create_time,time,hand_time,resolve,mode,info,time_out,extra) values
+        (#{orde.bid},#{orde.question},#{orde.status},#{orde.clas},#{orde.did},#{orde.sid},#{orde.createTime},#{orde.time},
+        #{orde.handTime},#{orde.resolve},#{orde.mode},#{orde.info},#{orde.timeOut},#{orde.extra})
+        </foreach>
+    </insert>-->
+
+    <select id="findOrder" parameterType="Order" resultMap="resultMap">
+        select * from orders
+        <where>
+            <if test=" bid != 0">
+                AND  bid = #{ bid}
+            </if>
+            <if test="did != 0 ">
+                AND did = #{did}
+            </if>
+            <if test="sid != 0 ">
+                AND sid = #{sid}
+            </if>
+            <if test="question != null ">
+                AND question = #{question}
+            </if>
+            <if test="status != null ">
+                AND status = #{status}
+            </if>
+            <if test="clas != null ">
+                AND class = #{clas}
+            </if>
+            <if test="createTime != null ">
+                AND create_time = #{createTime}
+            </if>
+            <if test="handTime != null ">
+                AND hand_time = #{handTime}
+            </if>
+            <if test="mode != null ">
+                AND mode = #{mode}
+            </if>
+
+            <if test="timeOut != 0 ">
+                AND time_out = #{timeOut}
+            </if>
+
+        </where>
+    </select>
+
+    <select id="findById" parameterType="Integer" resultMap="resultMap">
+
+        select * from orders where id=#{id}
+    </select>
+</mapper>

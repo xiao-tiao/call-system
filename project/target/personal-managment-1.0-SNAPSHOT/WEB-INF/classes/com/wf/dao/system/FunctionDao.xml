@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wf.dao.system.FunctionDao">
+    <resultMap id="resultMap" type="Function">
+        <id javaType="Integer" property="id" column="id"></id>
+        <result property="parentId" column="parent_id" javaType="Integer"/>
+        <result property="serialNum" column="serial_num" javaType="Integer"/>
+        <collection property="auth" javaType="ArrayList" column="id" ofType="Auth" select="com.wf.dao.system.AuthDao.findByFid"> </collection>
+    </resultMap>
+
+    <insert id="insert" parameterType="Function" useGeneratedKeys="true">
+        insert into function(name,parent_id,url,serial_num,accordion,info)
+         values(#{name},#{parentId},#{url},#{serialNum},#{accordion},#{info})
+    </insert>
+    <delete id="delete" parameterType="Integer">
+        delete from function where id=#{id}
+    </delete>
+    <update id="update" parameterType="Function">
+        update function set name=#{name},parent_id=#{parentId},url=#{url},
+         serial_num=#{serialNum},accordion=#{accordion},info=#{info} where id=#{id}
+    </update>
+    <select id="findById" parameterType="Integer" resultMap="resultMap">
+        select * from function where id=#{id}
+    </select>
+    <select id="findAll" resultMap="resultMap">
+        select * from function
+    </select>
+
+    <select id="findByAccordion" resultMap="resultMap" parameterType="Integer">
+        select * from function where accordion=#{accordion}
+    </select>
+
+    <select id="findByParentId" resultMap="resultMap" parameterType="Integer">
+        select * from function where parent_id=#{parentId}
+    </select>
+
+
+</mapper>

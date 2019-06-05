@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wf.dao.manage.WorkOrderDao">
+    <resultMap id="resultMap" type="WorkOrder">
+        <result property="bid" column="bid" javaType="Integer"></result>
+        <result property="did" column="did" javaType="Integer"></result>
+        <result property="sid" column="sid" javaType="Integer"></result>
+        <result property="clas" column="class" javaType="String"/>
+        <result property="createTime" column="create_time" javaType="Date"/>
+        <result property="handTime" column="hand_time" javaType="Date"/>
+        <association property="department" column="did" javaType="Department" select="com.wf.dao.system.DepartmentDao.findOne"/>
+        <association property="staff" column="sid" javaType="Staff" select="com.wf.dao.system.StaffDao.findOne"/>
+        <association property="busines" column="bid" javaType="Busines" select="com.wf.dao.manage.BusinesDao.findById" />
+    </resultMap>
+
+    <insert id="insert" parameterType="WorkOrder" useGeneratedKeys="true">
+        insert into work_order(bid,question,status,class,did,sid,create_time,time,hand_time,resolve,mode,info)
+        values(#{bid},#{question},#{status},#{clas},#{did},#{sid},#{createTime},#{time},
+        #{handTime},#{resolve},#{mode},#{info}  )
+    </insert>
+    <delete id="delete" parameterType="Integer">
+        delete from work_order where id=#{id}
+    </delete>
+    <update id="update" parameterType="WorkOrder">
+        update work_order set status=#{status},resolve=#{resolve},hand_time=#{handTime}
+          where id=#{id}
+    </update>
+    <select id="findWorkOrder" parameterType="WorkOrder" resultMap="resultMap">
+        select * from work_order
+        <where>
+            <if test="id != 0">
+                id = #{id}
+            </if>
+            <if test=" bid != 0">
+                AND  bid = #{ bid}
+            </if>
+            <if test="did != 0 ">
+                AND did = #{did}
+            </if>
+            <if test="sid != 0 ">
+                AND sid = #{sid}
+            </if>
+            <if test="question != null ">
+                AND question = #{question}
+            </if>
+            <if test="status != null ">
+                AND status = #{status}
+            </if>
+            <if test="clas != null ">
+                AND class = #{clas}
+            </if>
+            <if test="createTime != null ">
+                AND create_time = #{createTime}
+            </if>
+            <if test="handTime != null ">
+                AND hand_time = #{handTime}
+            </if>
+            <if test="mode != null ">
+                AND mode = #{mode}
+            </if>
+        </where>
+    </select>
+
+    <select id="findByDids" resultMap="resultMap">
+
+        select * from work_order where did in
+
+        <foreach collection="array" item="id" index="i" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+
+
+    </select>
+
+
+    <select id="findById" resultMap="resultMap" parameterType="Integer">
+
+        select * from work_order where id=#{id}
+    </select>
+
+
+    <delete id="deleteAll" parameterType="String">
+        delete from work_order where status=#{status}
+    </delete>
+</mapper>

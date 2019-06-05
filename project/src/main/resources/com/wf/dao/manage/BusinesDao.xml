@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wf.dao.manage.BusinesDao">
+    <resultMap id="resultMap" type="Busines">
+        <result property="telPhone" column="telphone" javaType="String"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="Busines" useGeneratedKeys="true">
+        insert into busines(name,contact,phone,telphone,licence,info,address) values(#{name},#{contact},#{phone},#{telPhone},
+        #{licence},#{info},#{address}  )
+    </insert>
+    <delete id="delete" parameterType="Integer">
+        delete from busines where id=#{id}
+    </delete>
+    <update id="update" parameterType="Busines">
+        update busines set name=#{name},contact=#{contact},phone=#{phone},
+         telphone=#{telPhone},licence=#{licence},info=#{info},address=#{address} where id=#{id}
+    </update>
+    <select id="findBusines" parameterType="Busines" resultMap="resultMap">
+        select * from busines
+        <where>
+            <if test="phone != null">
+            phone = #{phone}
+           </if>
+            <if test="name != null">
+                AND name = #{name}
+            </if>
+            <if test="telPhone != null ">
+                AND telphone = #{telPhone}
+            </if>
+        </where>
+    </select>
+    <select id="findAll" resultMap="resultMap">
+        select * from busines
+    </select>
+
+    <select id="findById" resultMap="resultMap" parameterType="Integer">
+        select * from busines where id=#{id}
+    </select>
+
+
+</mapper>

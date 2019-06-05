@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wf.dao.system.DepartmentDao">
+    <resultMap id="resultMap" type="Department">
+        <id property="id" column="id" javaType="Integer"/>
+        <result property="name" column="name" javaType="String"/>
+        <result property="address" column="address" javaType="String"/>
+        <collection property="post" javaType="ArrayList" column="id" ofType="Post" select="com.wf.dao.system.PostDao.findByDid"> </collection>
+        <collection property="auth" javaType="ArrayList" column="id" ofType="Auth" select="com.wf.dao.system.AuthDao.findByDid"> </collection>
+    </resultMap>
+
+    <insert id="insert" parameterType="Department" useGeneratedKeys="true">
+        insert into department(name,address) values(#{name},#{address})
+    </insert>
+    <delete id="delete" parameterType="Integer">
+        delete from department where id=#{id}
+    </delete>
+    <update id="update" parameterType="Department">
+        update department set name=#{name},address=#{address} where id=#{id}
+    </update>
+    <select id="findOne" parameterType="Integer" resultMap="resultMap">
+        select * from department where id=#{id}
+    </select>
+    <select id="findAll" resultMap="resultMap">
+        select * from department
+    </select>
+
+    <select id="findOneByName" resultMap="resultMap" parameterType="String">
+        select * from department where name=#{name}
+    </select>
+
+</mapper>
